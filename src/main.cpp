@@ -4,6 +4,7 @@
 #include <shader_s.h>
 #include "model.hpp"
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <filesystem.h>
@@ -23,7 +24,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 10.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -34,6 +35,9 @@ float lastFrame = 0.0f;
 
 // lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+ 
+glm::mat4 myMatrix = glm::translate(glm::mat4(), glm::vec3(0.1f, 0.1f, 0.1f));
 
 int main()
 {
@@ -80,7 +84,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
     Shader lightingShader(FileSystem::getPath("shaders/main.vs"), FileSystem::getPath("shaders/main.fs"));
-    Model chairtable(FileSystem::getPath("assets/Classroom_model1.obj"));
+    Model chairtable(FileSystem::getPath("assets/Chair_table/Table_Chair_Nadika_map.obj"));
 
 
     // render loop
@@ -116,6 +120,24 @@ int main()
 
         chairtable.Draw(lightingShader);
 
+
+     
+        // world transformation
+        glm::mat4 model1 = glm::mat4(1.0f)*myMatrix;
+        lightingShader.setMat4("model", model1);
+
+        chairtable.Draw(lightingShader);
+        
+        
+    
+        glColor3f(0.5f, 0.0f, 1.0f);
+        glBegin(GL_LINES);
+            
+            glVertex3f(0, 0,0);
+           
+            glVertex3f(10, 10,10);
+
+        glEnd();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

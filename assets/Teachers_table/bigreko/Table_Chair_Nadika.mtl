@@ -1,0 +1,57 @@
+# Blender MTL File: 'Table_Chair_Nadika.blend1111'
+# Material Count: 5
+
+newmtl Material
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.801923 0.441121 0.123920
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /home/nadika/classroomModel/teacher_Table_atlas.png
+
+newmtl Material.003
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.001031 0.001031 0.001031
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /home/nadika/Downloads/blackmetal.jpg
+
+newmtl Material.004
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.005605 0.005605 0.005605
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /home/nadika/Downloads/blackmetal.jpg
+
+newmtl Material.007
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002579 0.002579 0.002579
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /home/nadika/Downloads/blackmetal.jpg
+
+newmtl Material.008
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.001547 0.001547 0.001547
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /home/nadika/classroomModel/teacher_Table_atlas.png
