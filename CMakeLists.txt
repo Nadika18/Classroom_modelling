@@ -108,6 +108,8 @@ add_executable(
 	main src/main.cpp
 	src/mesh.h
 	src/model.hpp
+	src/indexBuffer.cpp
+	src/vertexBuffer.cpp
 
 )
 add_subdirectory(external_libraries/glfw)
