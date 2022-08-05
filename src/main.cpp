@@ -54,7 +54,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Classroom Modelling", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -93,10 +93,11 @@ int main()
 
     Shader planeShader(FileSystem::getPath("shaders/plane.vs"), FileSystem::getPath("shaders/plane.fs"));
     float floorvertexCoordinate[] = {
-        0.0f, -6.0f, 0.0f,
-        0.0f, -6.0f, 10.0f,
-        10.0f, -6.0f, 0.0f,
-        10.0f, -6.0f, 10.0f
+        //position              //texture coordinates
+        0.0f, -6.0f, 0.0f,     0.0f, 0.0f, //bottom left
+        0.0f, -6.0f, 10.0f,    0.0f, 1.0f, // bottom right
+        10.0f, -6.0f, 0.0f,    1.0f, 0.0f , // top left 
+        10.0f, -6.0f, 10.0f ,   1.0f, 1.0f // top right
     };
 
     unsigned int floorindex[] = {
@@ -104,7 +105,7 @@ int main()
     };
 
     unsigned int VBO[4], VAO[4], EBO[4];
-    {
+    
     glGenVertexArrays(1, &VAO[0]);
     glGenBuffers(1, &VBO[0]);
     glGenBuffers(1, &EBO[0]);
@@ -113,22 +114,52 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(floorvertexCoordinate), floorvertexCoordinate, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(floorindex), floorindex, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+     // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+      // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
+
+    // -------------------------
+    unsigned int floortexture;
+    glGenTextures(1, &floortexture); 
+    //binding texture
+    glBindTexture(GL_TEXTURE_2D, floortexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+    int width, height, nrChannels;
+    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    unsigned char *data = stbi_load(FileSystem::getPath("assets/floor/floors.png").c_str(), &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
     float eastwallvertexCoordinate[] = {
-        40.0f, 0.0f, 0.0f,
-        40.0f, 0.0f, 10.0f,
-        40.0f, 10.0f, 0.0f,
-        40.0f, 10.0f, 10.0f
+        //position          //texture
+        40.0f, 0.0f, 0.0f,  0.0f, 0.0f, //bottom left
+        40.0f, 0.0f, 5.0f,  1.0f, 0.0f, // bottom right
+        40.0f, 5.0f, 0.0f,   0.0f, 1.0f , // top left
+        40.0f, 5.0f, 5.0f,  1.0f, 1.0f // top right
     };
 
     unsigned int eastwallindex[] = {
         0,1,2,1,2,3
     };
-    {
+    
     glGenVertexArrays(1, &VAO[1]);
     glGenBuffers(1, &VBO[1]);
     glGenBuffers(1, &EBO[1]);
@@ -137,36 +168,105 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(eastwallvertexCoordinate), eastwallvertexCoordinate, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(eastwallindex), eastwallindex, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+      // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
+    // -------------------------
+    unsigned int walltexture;
+    glGenTextures(1, &walltexture); 
+    //binding texture
+    glBindTexture(GL_TEXTURE_2D, walltexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+   
+    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    unsigned char *walldata = stbi_load(FileSystem::getPath("assets/brick/bricks.png").c_str(), &width, &height, &nrChannels, 0);
+    if (walldata)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, walldata);
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(walldata);
 
-    float westwallvertexCoordinate[] = {
-        0.0f, 0.0f, 40.0f,
-        0.0f, 10.0f, 40.0f,
-        10.0f, 0.0f, 40.0f,
-        10.0f, 10.0f, 40.0f
+     
+    
+
+    float boardwallvertexCoordinate[] = {
+        0.0f, 0.0f, 55.0f,   0.0f, 0.0f, //bottom left
+        0.0f, 1.0f, 55.0f,   1.0f, 0.0f, // bottom right
+        1.0f, 0.0f, 55.0f,     0.0f, 1.0f , // top left
+        1.0f, 1.0f, 55.0f,   1.0f, 1.0f // top right
     };
 
-    unsigned int westwallindex[] = {
+    unsigned int boardwallindex[] = {
         0,1,2,1,2,3
     };
-    {
+    
     glGenVertexArrays(1, &VAO[2]);
     glGenBuffers(1, &VBO[2]);
     glGenBuffers(1, &EBO[2]);
     glBindVertexArray(VAO[2]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(westwallvertexCoordinate), westwallvertexCoordinate, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(boardwallvertexCoordinate), boardwallvertexCoordinate, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(westwallindex), westwallindex, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boardwallindex), boardwallindex, GL_STATIC_DRAW);
+    
+    //position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+
+    // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
+    // -------------------------
+    unsigned int boardwalltexture;
+    glGenTextures(1, &boardwalltexture); 
+    //binding texture
+    glBindTexture(GL_TEXTURE_2D, boardwalltexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+   
+    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    unsigned char *boarddata = stbi_load(FileSystem::getPath("assets/brick/bricks.png").c_str(), &width, &height, &nrChannels, 0);
+    if (boarddata)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, boarddata);
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(boarddata);
+
+
+
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -183,35 +283,58 @@ int main()
 
         // render
         // ------
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        // glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 200.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1.0f);
 
+         // bind Texture
+        
+       
         planeShader.use();
         planeShader.setMat4("projection", projection);
         planeShader.setMat4("view", view);
 
-        for ( int k = -9 ; k < 9 ; ++k){
-            for(int j = -9 ; j < 9 ; ++j){
+
+        //floor
+        for ( int k = -7 ; k < 11 ; ++k){ //z-cordinate for floor 
+            for(int j = -4 ; j < 7 ; ++j){  //x-cordinate for floor //y for east(look below)
+                glBindVertexArray(VAO[0]);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, floortexture);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f * j, 0.0f, 5.0f * k));
                 planeShader.setMat4("model", model);
-                glBindVertexArray(VAO[0]);
+
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-                if(k == 0)
-                if(j == 1 || j == 0 || j == -1)
-                continue;
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f*j, 5.0f * k));
+            } 
+        }
+
+
+        //eastwall
+        for ( int k = -7; k < 12 ; ++k){ //z-cordinate for floor 
+            for(int j = -2 ; j < 3 ; ++j){  //x-cordinate for floor //y for east(look below)
+               glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, walltexture);
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 5.0f*j, 5.0f * k));
                 planeShader.setMat4("model", model);
                 glBindVertexArray(VAO[1]);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-                // model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f * j, 0.0f, 5.0f * k));
-                // planeShader.setMat4("model", model);
-                // glBindVertexArray(VAO[2]);
-                // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
+
+        //boardwall y-z
+        for ( int k = -7; k < 12 ; ++k){ //z-cordinate for floor 
+            for(int j = -4 ; j < 7 ; ++j){  //x-cordinate for floor //y for east(look below)
+               glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, boardwalltexture);
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, 5.0f*k, 0.0f));
+                planeShader.setMat4("model", model);
+                glBindVertexArray(VAO[1]);
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            }
+        }
+
         
 
     
@@ -237,7 +360,7 @@ int main()
                         chairtable.Draw(lightingShader);
             }
         }
-        model = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 0.0f, 26.0f));
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 1.0f, 26.0f));
         lightingShader.setMat4("model", model);
 
         teachertable.Draw(lightingShader);
