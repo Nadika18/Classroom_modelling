@@ -148,6 +148,7 @@ int main()
     }
     stbi_image_free(data);
 
+    //east wall
     float eastwallvertexCoordinate[] = {
         //position          //texture
         40.0f, 0.0f, 0.0f,  0.0f, 0.0f, //bottom left
@@ -205,8 +206,43 @@ int main()
     stbi_image_free(walldata);
 
      
+    // //west wall
+    // float westwallvertexCoordinate[] = {
+    //     //position          //texture
+    //     -20.0f, 0.0f, 0.0f,  0.0f, 0.0f, //bottom left
+    //     -20.0f, 0.0f, 5.0f,  1.0f, 0.0f, // bottom right
+    //     -20.0f, 5.0f, 0.0f,   0.0f, 1.0f , // top left
+    //    -20.0f, 5.0f, 5.0f,  1.0f, 1.0f // top right
+    // };
+
+    // unsigned int westwallindex[] = {
+    //     0,1,2,1,2,3
+    // };
+    
+    // glGenVertexArrays(1, &VAO[5]);
+    // glGenBuffers(1, &VBO[5]);
+    // glGenBuffers(1, &EBO[5]);
+    // glBindVertexArray(VAO[5]);
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO[5]);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(westwallvertexCoordinate), westwallvertexCoordinate, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[5]);
+    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(westwallindex), westwallindex, GL_STATIC_DRAW);
+    
+    // //position attribute
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    // glEnableVertexAttribArray(0);
+    
+    // //binding texture
+    // glBindTexture(GL_TEXTURE_2D, walltexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // // texture coord attribute
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
+
+    // glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    // glBindVertexArray(0); 
     
 
+    //board wall
     float boardwallvertexCoordinate[] = {
         0.0f, 0.0f, 60.0f,   0.0f, 0.0f, //bottom left
         0.0f, 5.0f, 60.0f,   0.0f, 1.0f, // bottom right
@@ -407,9 +443,20 @@ int main()
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f+5.0f*j, 5.0f * k));
                 planeShader.setMat4("model", model);
                 glBindVertexArray(VAO[1]);
+                //space for window
                 if((j>-1 && j<2 ) && ((k> -6 && k<-1) || (k>4 && k<9) ))
                     continue;
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+                // //west wall
+                // glActiveTexture(GL_TEXTURE0);
+                // glBindTexture(GL_TEXTURE_2D, walltexture);
+                // model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f+5.0f*j, 5.0f * k));
+                // planeShader.setMat4("model", model);
+                // glBindVertexArray(VAO[5]);
+                // if((j>=-1 && j< 2) && (k>4 && k<8) )
+                //     continue;
+                // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
 
