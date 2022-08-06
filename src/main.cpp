@@ -104,7 +104,7 @@ int main()
         0,1,2,1,2,3
     };
 
-    unsigned int VBO[4], VAO[4], EBO[4];
+    unsigned int VBO[6], VAO[6], EBO[6];
     
     glGenVertexArrays(1, &VAO[0]);
     glGenBuffers(1, &VBO[0]);
@@ -281,6 +281,64 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
     
+
+    //ceiling
+    float ceilingvertexCoordinate[] = {
+       //position              //texture coordinates
+        0.0f, 14.0f, 0.0f,     0.0f, 0.0f, //bottom left
+        0.0f, 14.0f, 10.0f,    0.0f, 1.0f, // bottom right
+        10.0f, 14.0f, 0.0f,    1.0f, 0.0f , // top left 
+        10.0f, 14.0f, 10.0f ,   1.0f, 1.0f // top right
+    };
+
+    unsigned int ceilingindex[] = {
+        0,1,2,1,2,3
+    };
+    
+    glGenVertexArrays(1, &VAO[4]);
+    glGenBuffers(1, &VBO[4]);
+    glGenBuffers(1, &EBO[4]);
+    glBindVertexArray(VAO[4]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(ceilingvertexCoordinate), ceilingvertexCoordinate, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[4]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ceilingindex), ceilingindex, GL_STATIC_DRAW);
+    
+    //position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    
+      // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindVertexArray(0); 
+    // -------------------------
+    unsigned int ceilingtexture;
+    glGenTextures(1, &ceilingtexture); 
+    //binding texture
+    glBindTexture(GL_TEXTURE_2D, ceilingtexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+   
+    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    unsigned char *walldata1 = stbi_load(FileSystem::getPath("assets/ceiling/white.png").c_str(), &width, &height, &nrChannels, 0);
+    if (walldata1)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, walldata1);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(walldata1);
     
    
 
@@ -320,9 +378,19 @@ int main()
         //floor
         for ( int k = -7 ; k < 11 ; ++k){ //z-cordinate for floor 
             for(int j = -4 ; j < 7 ; ++j){  //x-cordinate for floor 
+            //floor
                 glBindVertexArray(VAO[0]);
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, floortexture);
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f * j, 0.0f, 5.0f * k));
+                planeShader.setMat4("model", model);
+               
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+                //ceiling
+                glBindVertexArray(VAO[4]);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, ceilingtexture);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f * j, 0.0f, 5.0f * k));
                 planeShader.setMat4("model", model);
                
