@@ -83,9 +83,33 @@ SET_TARGET_PROPERTIES(STB_IMAGE PROPERTIES LINKER_LANGUAGE C)
 
 find_package(OpenGL REQUIRED)
 
+### ASSIMP ###
+# AssImp already has a CMakeLists.txt so let's use these
+
+# Compile built-in, modified version of Zlib
+include(CheckIncludeFile)
+include(CheckTypeSize)
+include(CheckFunctionExists)
+add_subdirectory( external_libraries/assimp-3.0.1270/contrib/zlib )
+
+# Compile without Boost
+include_directories( external_libraries/assimp-3.0.1270/code/BoostWorkaround )
+add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
+
+# Compile AssImp
+set( LIB_INSTALL_DIR "lib")
+set(LIBASSIMP_COMPONENT libassimp3.0-r1270-OGLtuts)
+set(ZLIB_LIBRARIES zlib)
+set(BUILD_STATIC_LIB ON)
+#set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/zlib)
+add_subdirectory( external_libraries/assimp-3.0.1270/code )
 
 add_executable(
 	main src/main.cpp
+	src/mesh.h
+	src/model.hpp
+	src/indexBuffer.cpp
+	src/vertexBuffer.cpp
 
 )
 add_subdirectory(external_libraries/glfw)
@@ -97,6 +121,7 @@ include_directories(
 	inc
 	external_libraries/stb_image/include
 	external_libraries/glm
+	external_libraries/assimp-3.0.1270/include/
 	${CMAKE_BINARY_DIR}/config
 )
 
@@ -117,5 +142,5 @@ target_link_directories(main
 	PRIVATE external_libraries/glad/src
 	PRIVATE external_libraries/stb_image/src
 )
-target_link_libraries(main glfw ${OPENGL_LIBRARY}  GLEW_1130 GLAD_LIB STB_IMAGE)
+target_link_libraries(main glfw ${OPENGL_LIBRARY}  GLEW_1130 GLAD_LIB STB_IMAGE assimp)
 
