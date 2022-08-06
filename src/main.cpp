@@ -192,10 +192,10 @@ int main()
     // load image, create texture and generate mipmaps
    
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *walldata = stbi_load(FileSystem::getPath("assets/brick/bricks.png").c_str(), &width, &height, &nrChannels, 0);
+    unsigned char *walldata = stbi_load(FileSystem::getPath("assets/walls/pingYellow.png").c_str(), &width, &height, &nrChannels, 0);
     if (walldata)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, walldata);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, walldata);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
@@ -208,10 +208,10 @@ int main()
     
 
     float boardwallvertexCoordinate[] = {
-        0.0f, 0.0f, 50.0f,   0.0f, 0.0f, //bottom left
-        0.0f, 5.0f, 50.0f,   0.0f, 1.0f, // bottom right
-        5.0f, 0.0f, 50.0f,     1.0f, 0.0f , // top left
-        5.0f, 5.0f, 50.0f,   1.0f, 1.0f // top right
+        0.0f, 0.0f, 60.0f,   0.0f, 0.0f, //bottom left
+        0.0f, 5.0f, 60.0f,   0.0f, 1.0f, // bottom right
+        5.0f, 0.0f, 60.0f,     1.0f, 0.0f , // top left
+        5.0f, 5.0f, 60.0f,   1.0f, 1.0f // top right
     };
 
     unsigned int boardwallindex[] = {
@@ -236,33 +236,53 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+
+     //binding texture
+    glBindTexture(GL_TEXTURE_2D, walltexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // set the texture wrapping parameters
+    
+
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
-    // -------------------------
-    unsigned int boardwalltexture;
-    glGenTextures(1, &boardwalltexture); 
-    //binding texture
-    glBindTexture(GL_TEXTURE_2D, boardwalltexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
+    
    
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *boarddata = stbi_load(FileSystem::getPath("assets/brick/bricks.png").c_str(), &width, &height, &nrChannels, 0);
-    if (boarddata)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, boarddata);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(boarddata);
+
+    //opposite wall
+    float oppositeboardwallvertexCoordinate[] = {
+        0.0f, 0.0f, -35.0f,   0.0f, 0.0f, //bottom left
+        0.0f, 5.0f, -35.0f,   0.0f, 1.0f, // bottom right
+        5.0f, 0.0f, -35.0f,     1.0f, 0.0f , // top left
+        5.0f, 5.0f, -35.0f,   1.0f, 1.0f // top right
+    };
+
+    unsigned int oppositeboardwallindex[] = {
+        0,1,2,1,2,3
+    };
+    
+    glGenVertexArrays(1, &VAO[3]);
+    glGenBuffers(1, &VBO[3]);
+    glGenBuffers(1, &EBO[3]);
+    glBindVertexArray(VAO[3]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(oppositeboardwallvertexCoordinate), oppositeboardwallvertexCoordinate, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[3]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(oppositeboardwallindex), oppositeboardwallindex, GL_STATIC_DRAW);
+    
+    //position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    
+    //binding texture
+    glBindTexture(GL_TEXTURE_2D, walltexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindVertexArray(0); 
+    
+    
+   
 
 
 
@@ -299,38 +319,47 @@ int main()
 
         //floor
         for ( int k = -7 ; k < 11 ; ++k){ //z-cordinate for floor 
-            for(int j = -4 ; j < 7 ; ++j){  //x-cordinate for floor //y for east(look below)
+            for(int j = -4 ; j < 7 ; ++j){  //x-cordinate for floor 
                 glBindVertexArray(VAO[0]);
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, floortexture);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f * j, 0.0f, 5.0f * k));
                 planeShader.setMat4("model", model);
-
+               
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             } 
         }
 
 
         //eastwall
-        for ( int k = -7; k < 12 ; ++k){ //z-cordinate for floor 
-            for(int j = -1 ; j < 3 ; ++j){  //x-cordinate for floor //y for east(look below)
+        for ( int k = -7; k < 12 ; ++k){ //z-cordinate 
+            for(int j = -1 ; j < 3 ; ++j){  //y for east
                glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, walltexture);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f+5.0f*j, 5.0f * k));
                 planeShader.setMat4("model", model);
                 glBindVertexArray(VAO[1]);
+                if((j>-1 && j<2 ) && ((k> -6 && k<-1) || (k>4 && k<9) ))
+                    continue;
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
 
         //boardwall x-y
-        for ( int k = -7; k < 4 ; ++k){ //y for board
-            for(int j = -4 ; j < 7 ; ++j){  //x for board
+        for ( int k = -1; k < 3 ; ++k){ //y for board
+            for(int j = -4 ; j < 8; ++j){  //x for board
                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, boardwalltexture);
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, 5.0f*k, 0.0f));
+                glBindTexture(GL_TEXTURE_2D, walltexture);
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, -1.0f+5.0f*k, 0.0f));
                 planeShader.setMat4("model", model);
                 glBindVertexArray(VAO[2]);
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+                //opposite wall
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, walltexture);
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, -1.0f+5.0f*k, 0.0f));
+                planeShader.setMat4("model", model);
+                glBindVertexArray(VAO[3]);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
