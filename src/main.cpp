@@ -208,10 +208,10 @@ int main()
     
 
     float boardwallvertexCoordinate[] = {
-        0.0f, 0.0f, 55.0f,   0.0f, 0.0f, //bottom left
-        0.0f, 1.0f, 55.0f,   1.0f, 0.0f, // bottom right
-        1.0f, 0.0f, 55.0f,     0.0f, 1.0f , // top left
-        1.0f, 1.0f, 55.0f,   1.0f, 1.0f // top right
+        0.0f, 0.0f, 50.0f,   0.0f, 0.0f, //bottom left
+        0.0f, 5.0f, 50.0f,   0.0f, 1.0f, // bottom right
+        5.0f, 0.0f, 50.0f,     1.0f, 0.0f , // top left
+        5.0f, 5.0f, 50.0f,   1.0f, 1.0f // top right
     };
 
     unsigned int boardwallindex[] = {
@@ -313,24 +313,24 @@ int main()
 
         //eastwall
         for ( int k = -7; k < 12 ; ++k){ //z-cordinate for floor 
-            for(int j = -2 ; j < 3 ; ++j){  //x-cordinate for floor //y for east(look below)
+            for(int j = -1 ; j < 3 ; ++j){  //x-cordinate for floor //y for east(look below)
                glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, walltexture);
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 5.0f*j, 5.0f * k));
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f+5.0f*j, 5.0f * k));
                 planeShader.setMat4("model", model);
                 glBindVertexArray(VAO[1]);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
 
-        //boardwall y-z
-        for ( int k = -7; k < 12 ; ++k){ //z-cordinate for floor 
-            for(int j = -4 ; j < 7 ; ++j){  //x-cordinate for floor //y for east(look below)
+        //boardwall x-y
+        for ( int k = -7; k < 4 ; ++k){ //y for board
+            for(int j = -4 ; j < 7 ; ++j){  //x for board
                glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, boardwalltexture);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, 5.0f*k, 0.0f));
                 planeShader.setMat4("model", model);
-                glBindVertexArray(VAO[1]);
+                glBindVertexArray(VAO[2]);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
