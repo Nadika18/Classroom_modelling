@@ -1,15 +1,5 @@
-# Blender MTL File: 'window.blend'
+# Blender MTL File: 'window_final.blend'
 # Material Count: 2
-
-newmtl BatentePortaMaterial.001
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
 
 newmtl VidroMaterial
 Ns 250.000000
@@ -20,3 +10,15 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd window_atlas.png
+
+newmtl VidroMaterial.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.320107 0.499573 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd window_atlas.png

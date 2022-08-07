@@ -87,7 +87,7 @@ int main()
     Model chairtable(FileSystem::getPath("assets/Chair_table/Table_Chair_Nadika_map.obj"));
 
     Model teachertable(FileSystem::getPath("assets/Teachers_table/Table_Chair_Nadika.obj"));
-    Model wall_window(FileSystem::getPath("assets/window/window.obj"));
+     Model wall_window(FileSystem::getPath("assets/window/window_final.obj"));
 
     float chair_x_offset = 10.0f;
     float chair_z_offset = 5.0f;
@@ -105,7 +105,7 @@ int main()
         0,1,2,1,2,3
     };
 
-    unsigned int VBO[6], VAO[6], EBO[6];
+    unsigned int VBO[7], VAO[7], EBO[7];
     
     glGenVertexArrays(1, &VAO[0]);
     glGenBuffers(1, &VBO[0]);
@@ -138,7 +138,6 @@ int main()
     int width, height, nrChannels;
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
     unsigned char *data = stbi_load(FileSystem::getPath("assets/floor/floors.png").c_str(), &width, &height, &nrChannels, 0);
-
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -149,15 +148,6 @@ int main()
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
-
-
-
-   // unsigned char *win = stbi_load(FileSystem::getPath("assets/window/alum.jpg").c_str(), &width, &height, &nrChannels, 0);
-
-  
-
-
-
 
     //east wall
     float eastwallvertexCoordinate[] = {
@@ -329,27 +319,87 @@ int main()
     glBindVertexArray(0); 
     
 
-    //ceiling
-    float ceilingvertexCoordinate[] = {
-       //position              //texture coordinates
-        0.0f, 14.0f, 0.0f,     0.0f, 0.0f, //bottom left
-        0.0f, 14.0f, 10.0f,    0.0f, 1.0f, // bottom right
-        10.0f, 14.0f, 0.0f,    1.0f, 0.0f , // top left 
-        10.0f, 14.0f, 10.0f ,   1.0f, 1.0f // top right
+    // //ceiling
+    // float ceilingvertexCoordinate[] = {
+    //    //position              //texture coordinates
+    //     0.0f, 14.0f, 0.0f,     0.0f, 0.0f, //bottom left
+    //     0.0f, 14.0f, 10.0f,    0.0f, 1.0f, // bottom right
+    //     10.0f, 14.0f, 0.0f,    1.0f, 0.0f , // top left 
+    //     10.0f, 14.0f, 10.0f ,   1.0f, 1.0f // top right
+    // };
+
+    // unsigned int ceilingindex[] = {
+    //     0,1,2,1,2,3
+    // };
+    
+    // glGenVertexArrays(1, &VAO[4]);
+    // glGenBuffers(1, &VBO[4]);
+    // glGenBuffers(1, &EBO[4]);
+    // glBindVertexArray(VAO[4]);
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(ceilingvertexCoordinate), ceilingvertexCoordinate, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[4]);
+    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ceilingindex), ceilingindex, GL_STATIC_DRAW);
+    
+    // //position attribute
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    // glEnableVertexAttribArray(0);
+    
+    //   // texture coord attribute
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
+
+    // glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    // glBindVertexArray(0); 
+    // // -------------------------
+    // unsigned int ceilingtexture;
+    // glGenTextures(1, &ceilingtexture); 
+    // //binding texture
+    // glBindTexture(GL_TEXTURE_2D, ceilingtexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    // // set the texture wrapping parameters
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // // set texture filtering parameters
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // // load image, create texture and generate mipmaps
+   
+    // // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    // unsigned char *walldata1 = stbi_load(FileSystem::getPath("assets/ceiling/white.png").c_str(), &width, &height, &nrChannels, 0);
+    // if (walldata1)
+    // {
+    //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, walldata1);
+    //     glGenerateMipmap(GL_TEXTURE_2D);
+    // }
+    // else
+    // {
+    //     std::cout << "Failed to load texture" << std::endl;
+    // }
+    // stbi_image_free(walldata1);
+   //yeha 
+
+
+   //board ko
+    float bvertex[] = {
+       //position of board              //texture coordinates
+        0.0f, 0.0f, 58.0f,   0.0f, 0.0f, //bottom left
+        0.0f, 5.0f, 58.0f,   0.0f, 1.0f, // bottom right
+        5.0f, 0.0f, 58.0f,     1.0f, 0.0f , // top left
+        5.0f, 5.0f, 58.0f,   1.0f, 1.0f // top right
     };
 
-    unsigned int ceilingindex[] = {
+    unsigned int bindex[] = {
         0,1,2,1,2,3
     };
     
-    glGenVertexArrays(1, &VAO[4]);
-    glGenBuffers(1, &VBO[4]);
-    glGenBuffers(1, &EBO[4]);
-    glBindVertexArray(VAO[4]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(ceilingvertexCoordinate), ceilingvertexCoordinate, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[4]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ceilingindex), ceilingindex, GL_STATIC_DRAW);
+    glGenVertexArrays(1, &VAO[6]);
+    glGenBuffers(1, &VBO[6]);
+    glGenBuffers(1, &EBO[6]);
+    glBindVertexArray(VAO[6]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[6]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(bvertex), bvertex, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[6]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(bindex), bindex, GL_STATIC_DRAW);
     
     //position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -362,10 +412,10 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
     // -------------------------
-    unsigned int ceilingtexture;
-    glGenTextures(1, &ceilingtexture); 
+    unsigned int btexture;
+    glGenTextures(1, &btexture); 
     //binding texture
-    glBindTexture(GL_TEXTURE_2D, ceilingtexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    glBindTexture(GL_TEXTURE_2D, btexture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
     // set the texture wrapping parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -375,76 +425,23 @@ int main()
     // load image, create texture and generate mipmaps
    
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *walldata1 = stbi_load(FileSystem::getPath("assets/ceiling/white.png").c_str(), &width, &height, &nrChannels, 0);
-    if (walldata1)
+    unsigned char *walldata2 = stbi_load(FileSystem::getPath("assets/board/board.png").c_str(), &width, &height, &nrChannels, 0);
+    if (walldata2)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, walldata1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, walldata2);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
     {
         std::cout << "Failed to load texture" << std::endl;
     }
-    stbi_image_free(walldata1);
-    
-        // unsigned int VBO[6], VAO[6], EBO[6];
-    
+    stbi_image_free(walldata2);
 
- float boardvertexCoordinate[] = {
-        3.0f, 0.0f, 60.0f,   0.0f, 0.0f, //bottom left
-        3.0f, 4.0f, 60.0f,   0.0f, 1.0f, // bottom right
-        3.0f, 0.0f, 60.0f,     1.0f, 0.0f , // top left
-        3.0f, 4.0f, 60.0f,   1.0f, 1.0f // top right
-    };
 
-    unsigned int boardindex[] = {
-        0,1,2,1,2,3
-    };
-    
-    glGenVertexArrays(1, &VAO[0]);
-    glGenBuffers(1, &VBO[0]);
-    glGenBuffers(1, &EBO[0]);
-    glBindVertexArray(VAO[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(boardvertexCoordinate), boardvertexCoordinate, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boardindex), boardindex, GL_STATIC_DRAW);
-     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-      // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    glBindVertexArray(0); 
 
-    // -------------------------
-    unsigned int boardtexture;
-    glGenTextures(1, &boardtexture); 
-    //binding texture
-    glBindTexture(GL_TEXTURE_2D, boardtexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    // int width, height, nrChannels;
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *datas = stbi_load(FileSystem::getPath("assets/board/board.jpg").c_str(), &width, &height, &nrChannels, 0);
 
-    if (datas)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, datas);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(datas);
-    
-   
+
+
 
 
 
@@ -512,12 +509,9 @@ int main()
                 planeShader.setMat4("model", model);
                 glBindVertexArray(VAO[1]);
                 //space for window
-                if((j>-1 && j<2 ) && ((k> -6 && k<-1) || (k>4 && k<9) ))
-                    continue;
-                if(j==2 && k==4 )
-                  wall_window.Draw(lightingShader);
-      
-                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+                // if((j>-1 && j<2 ) && ((k> -6 && k<-1) || (k>4 && k<9) ))
+                //     continue;
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
                 // //west wall
                 // glActiveTexture(GL_TEXTURE0);
@@ -549,29 +543,20 @@ int main()
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
-
-        //board plane
-        
-
-
- for ( int k = -1; k < 3 ; ++k){ //y for board
-            for(int j = -4 ; j < 8; ++j){  //x for board
+//board
+            for ( int k = 0; k < 2 ; ++k){ //y for board
+            for(int j = -1 ; j < 6; ++j){  //x for board
                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, boardtexture);
+                glBindTexture(GL_TEXTURE_2D, btexture);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, -1.0f+5.0f*k, 0.0f));
                 planeShader.setMat4("model", model);
-                glBindVertexArray(VAO[2]);
+                glBindVertexArray(VAO[6]);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-                //opposite wall
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, boardtexture);
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f*j, -1.0f+5.0f*k, 0.0f));
-                planeShader.setMat4("model", model);
-                glBindVertexArray(VAO[3]);
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+                
             }
         }
-        
+
+
         
 
     
@@ -597,13 +582,23 @@ int main()
                         chairtable.Draw(lightingShader);
             }
         }
-
-        
         model = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 1.0f, 26.0f));
         lightingShader.setMat4("model", model);
 
         teachertable.Draw(lightingShader);
-         wall_window.Draw(lightingShader);
+    
+        // model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 11.0f));
+         model = glm::translate(glm::mat4(1.0f), glm::vec3(43.0f, 1.0f, 25.0f));
+         lightingShader.setMat4("model", model);
+        // model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f+5.0f*j, 5.0f * k));
+
+        wall_window.Draw(lightingShader);
+
+         model = glm::translate(glm::mat4(1.0f), glm::vec3(43.0f, 1.0f, -10.0f));
+         lightingShader.setMat4("model", model);
+        // model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f+5.0f*j, 5.0f * k));
+
+        wall_window.Draw(lightingShader);
       
 
 
@@ -677,4 +672,3 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
-
